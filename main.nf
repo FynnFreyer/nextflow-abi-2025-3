@@ -1,10 +1,10 @@
 process say_hello {
-  output:
-    stdout
-  exec:
-    println('Hello!')
+  script:
+    """
+    echo Hello World!
+    """
 }
 
 workflow {
-  say_hello | view
+  say_hello()
 }
