@@ -26,15 +26,16 @@ process normalize_words {
     path word_file
 
   output:
-    path "out.normalized.txt"
+    path "${prefix}.normalized.txt"
 
   script:
+    prefix = word_file.getSimpleName()
     """
     cat "$word_file" \\
       | tr -d '[:punct:]' \\
       | tr '[:upper:]' '[:lower:]' \\
       | tr -s ' ' '\\n' \\
-    > out.normalized.txt
+    > "${prefix}.normalized.txt"
     """
 }
 
@@ -43,34 +44,36 @@ process count_words {
     path word_file
   
   output:
-    path "out.counted.txt"
+    path "${prefix}.counted.txt"
 
   script:
+    prefix = word_file.getSimpleName()
     """
     cat "$word_file" \\
       | sort \\
       | uniq -c \\
       | sort -n \\
-    > out.counted.txt
+    > "${prefix}.counted.txt"
     """
 }
 
-// cat "out.normalized.txt"
-
 process take_most_common_word {
+  publishDir("out")
+
   input:
     path word_file
   
   output:
-    path "out.most_common.txt"
+    path "${prefix}.most_common.txt"
 
   script:
+    prefix = word_file.getSimpleName()
     """
     cat "$word_file" \\
       | tail -1 \\
       | tr -s ' ' \\
       | cut -d ' ' -f 3 \\
-    > out.most_common.txt
+    > "${prefix}.most_common.txt"
     """
 }
 
