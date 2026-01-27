@@ -1,4 +1,25 @@
+#!/usr/bin/env nextflow
+
 params.in = null
+params.help = false
+
+def usage() {
+  log.info """
+SYNOPSIS
+  
+  nextflow run FynnFreyer/nextflow-abi-2025-3 --in PATH
+
+DESCRIPTION
+
+  This is a word counting script. It takes a file path or
+  a glob pattern as input and counts the words in all files.
+
+OPTIONS
+
+  --in    a file path or a glob pattern, e.g., "data/*.txt"
+
+"""
+}
 
 process normalize_words {
   input:
@@ -54,8 +75,14 @@ process take_most_common_word {
 }
 
 workflow {
+  if (params.help) {
+    usage()
+    exit 0
+  }
+
   if (params.in == null) {
-    println("This is badd!!!")
+    println("Missing parameter --in!")
+    usage()
     exit 1
   }
 
